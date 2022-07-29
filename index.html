@@ -4,7 +4,59 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+      crossorigin="anonymous"
+    />
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <title>reCAPTCHA V2 - By Samer A.</title>
   </head>
-  <body></body>
+  <body>
+    <div class="container">
+      <h1>Subscribe</h1>
+      <form id="subscribeForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" name="email" id="email" class="form-control" />
+        </div>
+        <div class="form-group">
+          <div
+            class="g-recaptcha"
+            data-sitekey="6Ldd-i0hAAAAAF2xSxQ1C1_yAZMPymh4ORlUJsZj"
+          ></div>
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary" />
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("subscribeForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const name = document.querySelector("#name").value;
+          const email = document.querySelector("#email").value;
+          const captcha = document.querySelector("#g-recaptcha-response").value;
+
+          return fetch("/subscribe", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ name, email, captcha }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              alert(data.msg);
+              if (data.success) return location.reload();
+            });
+        });
+    </script>
+  </body>
 </html>
